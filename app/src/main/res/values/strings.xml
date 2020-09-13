@@ -4,9 +4,15 @@
 
     <!--Login -->
     <string name="login_sing_in">Sign in</string>
-    <string name="login_create_new">Create new</string>
+    <string name="login_create_new">Join</string>
     <string name="login_create">Create</string>
     <string name="login_create_new_title">Create new user</string>
+    <string name="sign_out">Sign out</string>
+    <string name="enter_name_hint">Enter your name</string>
+    <string name="enter_phone_number_hint">Enter your phone number</string>
+    <string name="enter_code">Enter verification code </string>
+    <string name="ok_button">OK</string>
+
 
     <!--Posts -->
     <string name="new_post_title">Create new post</string>

@@ -13,37 +13,41 @@
         app:layout_constraintGuide_percent="0.5" />
 
     <EditText
-        android:id="@+id/emailET"
+        android:id="@+id/newNameET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_medium"
         android:ems="10"
+        android:hint="@string/enter_name_hint"
         android:importantForAutofill="no"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/passwordET"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/newPhoneET"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="LabelFor" />
 
     <EditText
-        android:id="@+id/passwordET"
+        android:id="@+id/newPhoneET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_medium"
         android:ems="10"
+        android:hint="@string/enter_phone_number_hint"
         android:importantForAutofill="no"
-        android:inputType="textPassword"
+        android:inputType="phone"
         app:layout_constraintBottom_toTopOf="@+id/center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="LabelFor" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/createButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_medium"
+        android:backgroundTint="@color/colorPrimary"
         android:text="@string/login_create"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/center" />
