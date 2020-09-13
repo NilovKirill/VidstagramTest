@@ -35,7 +35,7 @@ class NewPostViewModel @Inject constructor(
                 user?.let {
                     createNewPostUseCase.createPost(
                         it.uid,
-                        it.email,
+                        it.displayName,
                         title,
                         fileUrl,
                         Date().time
