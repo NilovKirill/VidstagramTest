@@ -14,9 +14,6 @@ abstract class ActivityModule {
     abstract fun contributeLoginActivity(): LoginActivity
 
     @ContributesAndroidInjector
-    abstract fun contributeCreateNewUserActivity(): NewUserActivity
-
-    @ContributesAndroidInjector
     abstract fun contributePostActivity(): PostActivity
 
     @ContributesAndroidInjector

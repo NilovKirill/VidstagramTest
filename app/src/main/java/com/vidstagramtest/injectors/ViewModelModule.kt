@@ -32,11 +32,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(NewUserViewModel::class)
-    internal abstract fun provideCreateUserViewModel(viewModel: NewUserViewModel): ViewModel
-
-    @Binds
-    @IntoMap
     @ViewModelKey(PostViewModel::class)
     internal abstract fun providePostViewModel(viewModel: PostViewModel): ViewModel
 

@@ -6,10 +6,12 @@ import android.view.View
 import androidx.lifecycle.Observer
 import com.vidstagramtest.R
 import com.vidstagramtest.ui.LoadingState
+import com.vidstagramtest.ui.dialogs.PhoneValidationDialog
+import com.vidstagramtest.ui.interfaces.OnFinishEnterCode
 import com.vidstagramtest.ui.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.login_activity_layout.*
 
-class LoginActivity : BaseDaggerActivity() {
+class LoginActivity : BaseDaggerActivity(), OnFinishEnterCode {
 
     private lateinit var loginViewModel: LoginViewModel
 
@@ -26,6 +28,13 @@ class LoginActivity : BaseDaggerActivity() {
         loginViewModel.onStart()
     }
 
+    override fun onFinishEnterToken(code: String) {
+        loginViewModel.signIn(
+            nameET.text.toString(),
+            code
+        )
+    }
+
     private fun initLiveData() {
         val loadingObserver = Observer<LoadingState> { value ->
             when (value) {
@@ -33,7 +42,6 @@ class LoginActivity : BaseDaggerActivity() {
                     showProgressDialog(true)
                 }
                 is LoadingState.Done -> {
-                    //Sign in done
                     showProgressDialog(false)
                     val intent = Intent(this, PostActivity::class.java)
                     startActivity(intent)
@@ -42,21 +50,29 @@ class LoginActivity : BaseDaggerActivity() {
                 is LoadingState.Error -> {
                     showProgressDialog(false)
                 }
+                is LoadingState.VerificationStart -> {
+                    showEnterCodeDialog();
+                }
+                is LoadingState.VerificationDone -> {
+
+                }
+                is LoadingState.VerificationError -> {
+
+                }
             }
         }
         loginViewModel.loadingState.observe(this, loadingObserver)
     }
 
+    private fun showEnterCodeDialog() {
+        val codeDialog = PhoneValidationDialog.newInstance()
+        codeDialog.setListener(this)
+        codeDialog.show(supportFragmentManager, null)
+    }
+
     private fun setupView() {
-        createNewUserButton.setOnClickListener {
-            val intent = Intent(this, NewUserActivity::class.java)
-            startActivity(intent)
-        }
         signInButton.setOnClickListener {
-            loginViewModel.signIn(
-                emailET.text.toString(),
-                passwordET.text.toString()
-            )
+            loginViewModel.verifyPhoneNumber(phoneET.text.toString())
         }
     }
 

@@ -33,8 +33,10 @@
             android:layout_margin="@dimen/margin_medium"
             android:contentDescription="@null"
             android:src="@drawable/ic_add_24"
+            app:backgroundTint="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@android:color/white" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
