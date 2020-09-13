@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">VidstagramTest</string>
+
+
+    <!--Login -->
+    <string name="login_sing_in">Sign in</string>
+    <string name="login_create_new">Create new</string>
+    <string name="login_create">Create</string>
+    <string name="login_create_new_title">Create new user</string>
+
+    <!--Posts -->
+    <string name="new_post_title">Create new post</string>
+    <string name="new_post_add_title">Add a title</string>
+    <string name="post_button">Post</string>
+    <string name="video_not_added">Video not added</string>
+    <string name="add_button">Add</string>
+
+</resources>

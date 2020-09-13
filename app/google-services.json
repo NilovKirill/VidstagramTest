@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "410018408225",
+    "firebase_url": "https://vidstagramtest.firebaseio.com",
+    "project_id": "vidstagramtest",
+    "storage_bucket": "vidstagramtest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410018408225:android:2b842f36d95231bed0c060",
+        "android_client_info": {
+          "package_name": "com.vidstagramtest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410018408225-doli0ao5q2v1nunkd90htkslle1h1plk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkVkcRhugUX3sRoq0xWVPckGEnqJN2uJA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410018408225-doli0ao5q2v1nunkd90htkslle1h1plk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
