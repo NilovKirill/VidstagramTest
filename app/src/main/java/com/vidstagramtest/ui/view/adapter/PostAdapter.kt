@@ -51,6 +51,8 @@ class PostAdapter(
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val currentItem = dataSet[position]
         context?.let { context ->
+            Glide.with(context).clear(holder.mediaImage)
+            Glide.with(context).clear(holder.userAvatar)
             Glide
                 .with(context)
                 .load(R.drawable.default_avatar)
@@ -66,8 +68,11 @@ class PostAdapter(
                     .apply(options)
                     .load(videoUrl)
                     .into(holder.mediaImage)
-
+                holder.mediaImage.visibility = View.VISIBLE
+                holder.playerView.visibility = View.GONE
                 holder.mediaImage.setOnClickListener {
+                    holder.mediaImage.visibility = View.GONE
+                    holder.playerView.visibility = View.VISIBLE
                     try {
                         val video: Uri =
                             Uri.parse(videoUrl)
@@ -94,13 +99,8 @@ class PostAdapter(
         }
 
 
-
-        currentItem.title?.let {
-            holder.postTitle.text = it
-        }
-        currentItem.userName?.let {
-            holder.userName.text = it
-        }
+        holder.postTitle.text = currentItem.title ?: ""
+        holder.userName.text = currentItem.userName ?: ""
         currentItem.timestamp?.let {
             holder.timeTv.text = getFormattedDate(it)
         }
@@ -120,6 +120,11 @@ class PostAdapter(
     ): String? {
         val simpleDateFormat = SimpleDateFormat("dd MMM, h:mm a", Locale.ENGLISH)
         return simpleDateFormat.format(unixTime)
+    }
+
+    fun addNewItems(newPosts: List<PostModel>) {
+        dataSet.addAll(0, newPosts)
+        notifyItemRangeInserted(0, newPosts.size)
     }
 
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

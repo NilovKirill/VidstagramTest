@@ -2,12 +2,13 @@ package com.vidstagramtest.usecases
 
 import com.vidstagramtest.model.PostModel
 import com.vidstagramtest.repository.posts.PostsRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class NewPostsListenerUseCase @Inject constructor(
+class SubscribeToChangesUseCase @Inject constructor(
     private val postsRepository: PostsRepository
 ) {
-    suspend fun getPosts(): List<PostModel> {
+    suspend fun getNewPostListener(): Flow<List<PostModel>> {
         return postsRepository.getPostsChanges()
     }
 }

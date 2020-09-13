@@ -28,11 +28,11 @@ class PostActivity : BaseDaggerActivity() {
         setupViews()
         setupRecyclerView()
         initLiveData()
+        postViewModel.onCreate()
     }
 
     override fun onStart() {
         super.onStart()
-        postViewModel.onStart()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -74,6 +74,11 @@ class PostActivity : BaseDaggerActivity() {
             postAdapter.setList(postList)
         }
         postViewModel.postLiveData.observe(this, postListObservable)
+
+        val changedPostObserver = Observer<List<PostModel>> { newPosts ->
+            postAdapter.addNewItems(newPosts.sortedByDescending { it.timestamp })
+        }
+        postViewModel.changedPostsLiveData.observe(this, changedPostObserver)
     }
 
     private fun setupViews() {

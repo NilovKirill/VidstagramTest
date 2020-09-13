@@ -1,5 +1,7 @@
 package com.vidstagramtest.ui
 
+import com.google.firebase.auth.PhoneAuthCredential
+
 sealed class LoadingState {
 
     object Loading : LoadingState()
@@ -7,7 +9,8 @@ sealed class LoadingState {
     class Error(val throwable: Throwable) : LoadingState()
 
     object VerificationStart : LoadingState()
-    class VerificationDone(val code: String) : LoadingState()
+    object VerificationGetCode : LoadingState()
+    class VerificationDone(val phoneCred: PhoneAuthCredential) : LoadingState()
     object VerificationError : LoadingState()
 
 }
