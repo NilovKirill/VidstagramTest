@@ -14,7 +14,7 @@ interface PostsRepository {
         timestamp: Long
     ): Flow<Boolean>
 
-    suspend fun getPostsChanges(): List<PostModel>
+    suspend fun getPostsChanges(): Flow<List<PostModel>>
 
     suspend fun getAllPosts(): List<PostModel>
 }

@@ -27,7 +27,7 @@ class LoginViewModel @Inject constructor(
     private val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-            //signInWithPhoneAuthCredential(credential)
+            loadingState.value = LoadingState.VerificationDone(credential)
         }
 
         override fun onVerificationFailed(e: FirebaseException) {
@@ -39,7 +39,19 @@ class LoginViewModel @Inject constructor(
             token: PhoneAuthProvider.ForceResendingToken
         ) {
             verificationCodeId = verificationId
-            loadingState.value = LoadingState.VerificationDone(verificationId)
+            loadingState.value = LoadingState.VerificationGetCode
+        }
+    }
+
+    fun signInWithPhoneAuthCredential(name: String, credential: PhoneAuthCredential) {
+        viewModelScope.launch(exceptionHandler) {
+            try {
+                loadingState.value = LoadingState.Loading
+                signInUseCase.signIn(name, credential)
+                loadingState.value = LoadingState.Done
+            } catch (e: Exception) {
+                loadingState.value = LoadingState.Error(e)
+            }
         }
     }
 
@@ -62,7 +74,7 @@ class LoginViewModel @Inject constructor(
             try {
                 loadingState.value = LoadingState.Loading
                 val credential = PhoneAuthProvider.getCredential(verificationCodeId, phoneCode)
-                val authResult = signInUseCase.signIn(name, credential)
+                signInUseCase.signIn(name, credential)
                 loadingState.value = LoadingState.Done
             } catch (e: Exception) {
                 loadingState.value = LoadingState.Error(e)

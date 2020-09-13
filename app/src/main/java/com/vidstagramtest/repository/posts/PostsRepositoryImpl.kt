@@ -9,10 +9,10 @@ import com.vidstagramtest.model.mappers.PostMapper
 import com.vidstagramtest.model.network.PostBodyRequest
 import com.vidstagramtest.network.helpers.PostNetHelper
 import com.vidstagramtest.utils.FIRESTORE_COLLECTION_NAME
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
 import java.util.*
 import javax.inject.Inject
@@ -60,15 +60,30 @@ class PostsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPostsChanges(): List<PostModel> {
-        TODO("Not yet implemented")
+    @ExperimentalCoroutinesApi
+    override suspend fun getPostsChanges(): Flow<List<PostModel>> {
+        return callbackFlow {
+            val docRef = fireStore.collection(FIRESTORE_COLLECTION_NAME)
+            val listener = docRef.addSnapshotListener { snapshot, exception ->
+                snapshot?.documentChanges?.let {
+                    offer(mapper.mapDocChangeToPostModel(snapshot.documentChanges))
+                }
+                exception?.let {
+                    cancel(it.message.toString())
+                }
+            }
+            awaitClose {
+                listener.remove()
+                cancel()
+            }
+        }
     }
 
     override suspend fun getAllPosts(): List<PostModel> {
         val snapshot: QuerySnapshot = fireStore.collection(FIRESTORE_COLLECTION_NAME)
             .get()
             .await()
-        return mapper.mapToPostModel(snapshot.documents)
+        return mapper.mapDocToPostModel(snapshot.documents)
     }
 
 }

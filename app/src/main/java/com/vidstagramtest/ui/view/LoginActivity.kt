@@ -50,14 +50,14 @@ class LoginActivity : BaseDaggerActivity(), OnFinishEnterCode {
                 is LoadingState.Error -> {
                     showProgressDialog(false)
                 }
-                is LoadingState.VerificationStart -> {
-                    showEnterCodeDialog();
-                }
                 is LoadingState.VerificationDone -> {
-
+                    loginViewModel.signInWithPhoneAuthCredential(
+                        nameET.text.toString(),
+                        value.phoneCred
+                    )
                 }
-                is LoadingState.VerificationError -> {
-
+                is LoadingState.VerificationGetCode -> {
+                    showEnterCodeDialog()
                 }
             }
         }
