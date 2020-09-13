@@ -2,7 +2,6 @@ package com.vidstagramtest.ui.view.adapter
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -17,12 +17,7 @@ import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.trackselection.TrackSelector
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.upstream.BandwidthMeter
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.vidstagramtest.R
 import com.vidstagramtest.model.PostModel
@@ -62,18 +57,20 @@ class PostAdapter(
                 .apply(RequestOptions.circleCropTransform())
                 .into(holder.userAvatar)
 
+            currentItem.videoUrl?.let { videoUrl ->
+                //Load video frame
+                val options = RequestOptions().frame(999999)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                Glide.with(context)
+                    .asBitmap()
+                    .apply(options)
+                    .load(videoUrl)
+                    .into(holder.mediaImage)
 
-            currentItem.videoUrl?.let {
                 holder.mediaImage.setOnClickListener {
-                    var exoPlayer: SimpleExoPlayer = ExoPlayerFactory.newSimpleInstance(context)
                     try {
-                        val bandwidthMeter: BandwidthMeter =
-                            DefaultBandwidthMeter.Builder(context).build()
-                        val trackSelector: TrackSelector =
-                            DefaultTrackSelector(AdaptiveTrackSelection.Factory(bandwidthMeter))
-                        exoPlayer = ExoPlayerFactory.newSimpleInstance(context) as SimpleExoPlayer
                         val video: Uri =
-                            Uri.parse(currentItem.videoUrl)
+                            Uri.parse(videoUrl)
                         val dataSourceFactory =
                             DefaultHttpDataSourceFactory("video")
                         val extractorsFactory: ExtractorsFactory = DefaultExtractorsFactory()
@@ -84,15 +81,19 @@ class PostAdapter(
                             null,
                             null
                         )
+                        //Todo refactor it. Should have only one instance of exoplayer
+                        val exoPlayer: SimpleExoPlayer = ExoPlayerFactory.newSimpleInstance(context)
                         holder.playerView.player = exoPlayer
                         exoPlayer.prepare(mediaSource)
                         exoPlayer.playWhenReady = false
                     } catch (e: Exception) {
-                        Log.e("ViewHolder2", "exoplayer error$e")
+
                     }
                 }
             }
         }
+
+
 
         currentItem.title?.let {
             holder.postTitle.text = it
@@ -110,14 +111,14 @@ class PostAdapter(
     fun setList(items: List<PostModel>) {
         dataSet.clear()
         dataSet.addAll(items)
+        dataSet.sortByDescending { it.timestamp }
         notifyDataSetChanged()
     }
 
     private fun getFormattedDate(
         unixTime: Long
     ): String? {
-        val simpleDateFormat: SimpleDateFormat =
-            SimpleDateFormat("dd MMM yyyy, h:mm a", Locale.ENGLISH)
+        val simpleDateFormat = SimpleDateFormat("dd MMM, h:mm a", Locale.ENGLISH)
         return simpleDateFormat.format(unixTime)
     }
 

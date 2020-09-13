@@ -4,6 +4,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.vidstagramtest.model.UserModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
@@ -15,9 +16,18 @@ class UsersRepositoryImpl @Inject constructor(
 ) : UsersRepository {
 
     override suspend fun signIn(name: String, phoneAuth: PhoneAuthCredential): AuthResult? {
-        return firebaseAuth
+        val authResult = firebaseAuth
             .signInWithCredential(phoneAuth)
             .await()
+
+        authResult?.user?.let { user ->
+            val profileUpdates = userProfileChangeRequest {
+                displayName = name
+            }
+            user.updateProfile(profileUpdates)
+                .await()
+        }
+        return authResult
     }
 
     override suspend fun signOut() {
